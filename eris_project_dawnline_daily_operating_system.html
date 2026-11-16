@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ERIS — Project Dawnline | Daily Operating System</title>
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            shadowGrey: '#272727',
+            sapphire: '#2B50AA',
+            plum: '#FF9FE5',
+          },
+          fontFamily: {
+            sans: ['Arial', 'Helvetica', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-white text-shadowGrey font-sans antialiased selection:bg-plum selection:text-shadowGrey">
+
+  <!-- Main Container -->
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8">
+
+    <!-- 1. HEADER BANNER -->
+    <header class="rounded-2xl overflow-hidden shadow-sm border border-shadowGrey/10 bg-shadowGrey text-white">
+      <!-- Tri-color Minimalist Top Accent Bar -->
+      <div class="h-2 w-full flex">
+        <div class="w-1/2 bg-sapphire"></div>
+        <div class="w-1/4 bg-plum"></div>
+        <div class="w-1/4 bg-white/20"></div>
+      </div>
+
+      <div class="p-6 sm:p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div class="space-y-2">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sapphire/30 border border-sapphire text-xs font-bold tracking-wider uppercase text-white">
+            <span class="w-2 h-2 rounded-full bg-plum animate-pulse"></span>
+            Personal Operating System • v1.0
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            PROJECT DAWNLINE
+          </h1>
+          <p class="text-sm text-gray-300 max-w-xl">
+            “Small consistent wins. Measurable progress. Long-term stability.”
+          </p>
+        </div>
+
+        <!-- Player Profile & Live Clock Card -->
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 sm:min-w-[280px] space-y-2.5 text-xs sm:text-sm">
+          <div class="flex justify-between items-center border-b border-white/10 pb-2">
+            <span class="text-gray-400 uppercase tracking-wider text-[11px]">Player</span>
+            <span class="font-bold text-white">ERIS <span class="text-plum font-normal">(MC)</span></span>
+          </div>
+          <div class="flex justify-between items-center border-b border-white/10 pb-2">
+            <span class="text-gray-400 uppercase tracking-wider text-[11px]">Campaign</span>
+            <span class="font-semibold text-gray-200">24-Month Survival</span>
+          </div>
+          <div class="flex justify-between items-center pt-0.5">
+            <span class="text-gray-400 uppercase tracking-wider text-[11px]">Live Time</span>
+            <span id="live-clock" class="font-bold text-plum tabular-nums">Memuat waktu...</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. DAILY PROGRESS & EXP TRACKER -->
+    <section aria-label="Daily Progress and EXP Tracker" class="bg-white border border-shadowGrey/15 rounded-2xl p-5 sm:p-6 shadow-sm">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-shadowGrey flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-sm bg-sapphire inline-block"></span>
+            Daily Execution Status
+          </h2>
+          <p class="text-xs text-shadowGrey/65 mt-0.5">Target kendali harian: minimal 80% eksekusi aktivitas prioritas.</p>
+        </div>
+
+        <!-- Metrics Pills -->
+        <div class="flex flex-wrap items-center gap-2.5">
+          <div class="px-3.5 py-2 rounded-xl bg-shadowGrey/5 border border-shadowGrey/10 text-xs">
+            <span class="text-shadowGrey/70">Selesai:</span>
+            <strong id="completed-count" class="text-shadowGrey font-bold ml-1">0 / 0</strong>
+          </div>
+          <div class="px-3.5 py-2 rounded-xl bg-sapphire/10 border border-sapphire/20 text-xs">
+            <span class="text-sapphire font-medium">Progress:</span>
+            <strong id="progress-percent" class="text-sapphire font-bold ml-1">0%</strong>
+          </div>
+          <div class="px-3.5 py-2 rounded-xl bg-plum/25 border border-plum text-xs">
+            <span class="text-shadowGrey font-medium">Daily EXP:</span>
+            <strong id="total-exp" class="text-shadowGrey font-bold ml-1">+0 EXP</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="w-full h-3.5 bg-shadowGrey/10 rounded-full overflow-hidden p-0.5">
+        <div id="progress-bar" class="h-full bg-sapphire rounded-full transition-all duration-300 ease-out" style="width: 0%;"></div>
+      </div>
+      <div class="flex justify-between text-[11px] text-shadowGrey/60 mt-2">
+        <span>0% Start</span>
+        <span id="status-badge" class="font-bold text-sapphire">Mode: Ready to Execute</span>
+        <span>80% Target • 100% Full Run</span>
+      </div>
+    </section>
+
+    <!-- 3. SECTION 1: THREE DAILY NON-NEGOTIABLES -->
+    <section aria-label="Three Daily Non-Negotiables" class="space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-sapphire">01 • Core Directives</span>
+          <h2 class="text-lg sm:text-xl font-bold text-shadowGrey">Three Daily Non-Negotiables</h2>
+        </div>
+        <span class="text-xs px-2.5 py-1 rounded-md bg-plum/30 text-shadowGrey font-bold">+10 EXP / Item</span>
+      </div>
+
+      <div id="non-negotiables-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- 4. SECTION 2: ERIS DAILY RUN SCHEDULE -->
+    <section aria-label="ERIS Daily Run Schedule" class="bg-white border border-shadowGrey/15 rounded-2xl overflow-hidden shadow-sm">
+      <div class="p-5 sm:p-6 border-b border-shadowGrey/10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-sapphire">02 • Time-Blocking Execution</span>
+          <h2 class="text-lg sm:text-xl font-bold text-shadowGrey">ERIS Daily Run Schedule (04.30 – 21.00)</h2>
+          <p class="text-xs text-shadowGrey/70 mt-0.5">Klik baris kegiatan untuk menandai selesai (+5 EXP per blok).</p>
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div id="schedule-filters" class="flex flex-wrap gap-1.5">
+          <button type="button" data-filter="All" class="filter-btn active px-3 py-1.5 rounded-lg text-xs font-bold transition bg-shadowGrey text-white">All</button>
+          <button type="button" data-filter="High Impact" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition bg-shadowGrey/5 text-shadowGrey hover:bg-sapphire/10">High Impact</button>
+          <button type="button" data-filter="Work" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition bg-shadowGrey/5 text-shadowGrey hover:bg-sapphire/10">Work</button>
+          <button type="button" data-filter="Ibadah" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition bg-shadowGrey/5 text-shadowGrey hover:bg-sapphire/10">Ibadah</button>
+          <button type="button" data-filter="Personal" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition bg-shadowGrey/5 text-shadowGrey hover:bg-sapphire/10">Personal</button>
+        </div>
+      </div>
+
+      <!-- Responsive Schedule Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-shadowGrey text-white text-xs uppercase tracking-wider">
+              <th class="py-3.5 px-4 w-12 text-center">Done</th>
+              <th class="py-3.5 px-4 w-36">Waktu</th>
+              <th class="py-3.5 px-4">Aktivitas ERIS</th>
+              <th class="py-3.5 px-4 hidden md:table-cell">Fokus / Output</th>
+              <th class="py-3.5 px-4 w-28 text-right">Kategori</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-tbody" class="divide-y divide-shadowGrey/10 text-sm">
+            <!-- Rendered via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 5. SECTION 3: ISLAMIC PRACTICES & EXP TRACKER -->
+    <section aria-label="Islamic Practices and EXP Tracker" class="bg-white border border-shadowGrey/15 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-shadowGrey/10 pb-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-sapphire">03 • Spiritual Anchor</span>
+          <h2 class="text-lg sm:text-xl font-bold text-shadowGrey">Islamic Practices & Habit Reflection</h2>
+          <p class="text-xs text-shadowGrey/70 mt-0.5">
+            EXP hanyalah sistem gamifikasi pribadi untuk menjaga konsistensi kebiasaan, bukan ukuran pahala.
+          </p>
+        </div>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-shadowGrey text-white text-xs font-bold self-start sm:self-center">
+          <span class="w-2 h-2 rounded-full bg-plum"></span>
+          Wajib: Salat 5 Waktu (Non-Kompetisi)
+        </div>
+      </div>
+
+      <div id="islamic-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- 6. CUSTOM TASK ADDER & DAILY REFLECTION -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Custom Tasks Box (7 Cols) -->
+      <section aria-label="Custom Extra Tasks" class="lg:col-span-7 bg-white border border-shadowGrey/15 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between space-y-4">
+        <div class="space-y-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-sapphire">04 • Tactical Side Quests</span>
+            <h2 class="text-lg font-bold text-shadowGrey">Tugas Tambahan Hari Ini</h2>
+            <p class="text-xs text-shadowGrey/70">Tambahkan target spesifik harian (misal: Follow-up HR PT X, Latihan XLOOKUP).</p>
+          </div>
+
+          <!-- Add Task Form -->
+          <form id="custom-task-form" class="flex gap-2">
+            <input 
+              type="text" 
+              id="custom-task-input" 
+              placeholder="Ketik tugas tambahan hari ini..." 
+              required
+              class="flex-1 px-3.5 py-2.5 text-sm rounded-xl border border-shadowGrey/20 focus:outline-none focus:border-sapphire focus:ring-2 focus:ring-sapphire/20 text-shadowGrey"
+            />
+            <button 
+              type="submit" 
+              class="px-4 py-2.5 rounded-xl bg-sapphire hover:bg-sapphire/90 text-white text-sm font-bold transition shrink-0 cursor-pointer"
+            >
+              + Tambah
+            </button>
+          </form>
+
+          <!-- Custom Task List -->
+          <ul id="custom-task-list" class="space-y-2">
+            <!-- Rendered via JS -->
+          </ul>
+        </div>
+
+        <div class="pt-3 border-t border-shadowGrey/10 flex items-center justify-between text-xs text-shadowGrey/60">
+          <span>Setiap tugas tambahan bernilai +5 EXP</span>
+          <span id="custom-task-counter">0 tugas</span>
+        </div>
+      </section>
+
+      <!-- Daily Reflection Note & Reset Box (5 Cols) -->
+      <section aria-label="Daily Reflection and Controls" class="lg:col-span-5 bg-white border border-shadowGrey/15 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between space-y-4">
+        <div class="space-y-3">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-sapphire">05 • End-of-Day Log</span>
+            <h2 class="text-lg font-bold text-shadowGrey">Catatan Evaluasi Harian</h2>
+            <p class="text-xs text-shadowGrey/70">Catat output nyata, hambatan hari ini, dan 3 prioritas esok.</p>
+          </div>
+
+          <textarea 
+            id="daily-notes" 
+            rows="6" 
+            placeholder="Contoh:&#10;- Terkirim 5 lamaran Admin/HR&#10;- Selesai modul Pivot Table&#10;- Hambatan: Rumah agak bising sore hari (atasi pakai earphone)"
+            class="w-full p-3.5 text-sm rounded-xl border border-shadowGrey/20 focus:outline-none focus:border-sapphire focus:ring-2 focus:ring-sapphire/20 text-shadowGrey resize-none leading-relaxed"
+          ></textarea>
+        </div>
+
+        <div class="space-y-3 pt-2">
+          <div class="flex items-center justify-between text-xs">
+            <span id="save-indicator" class="text-sapphire font-medium">✓ Tersimpan otomatis di browser</span>
+          </div>
+
+          <!-- Reset Button with Inline Confirmation -->
+          <div id="reset-container">
+            <button 
+              type="button" 
+              id="btn-reset-prompt" 
+              class="w-full py-2.5 px-4 rounded-xl border border-shadowGrey/25 text-shadowGrey hover:bg-shadowGrey hover:text-white text-xs font-bold uppercase tracking-wider transition cursor-pointer"
+            >
+              Reset Hari Ini (Mulai Hari Baru)
+            </button>
+          </div>
+          <div id="reset-confirm-box" class="hidden p-3 rounded-xl bg-plum/20 border border-plum space-y-2">
+            <p class="text-xs font-bold text-shadowGrey">Reset semua centang & catatan untuk hari baru?</p>
+            <div class="flex gap-2">
+              <button type="button" id="btn-reset-confirm" class="flex-1 py-1.5 rounded-lg bg-shadowGrey text-white text-xs font-bold cursor-pointer">Ya, Reset</button>
+              <button type="button" id="btn-reset-cancel" class="flex-1 py-1.5 rounded-lg bg-white border border-shadowGrey/20 text-shadowGrey text-xs font-bold cursor-pointer">Batal</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-shadowGrey/60 py-4 border-t border-shadowGrey/10">
+      <p class="font-bold text-shadowGrey">ERIS — PROJECT DAWNLINE • 24-MONTH SURVIVAL ROADMAP</p>
+      <p class="mt-1">“Misi ERIS bukan terlihat sukses, melainkan menjadi semakin mampu secara finansial untuk memperluas pilihan hidup keluarga.”</p>
+    </footer>
+
+  </div>
+
+  <!-- Application Script -->
+  <script>
+    // --- DATA DEFINITIONS ---
+    const NON_NEGOTIABLES = [
+      {
+        id: 'nn-income',
+        title: 'Income Action',
+        tag: 'Prioritas 1',
+        desc: 'Melakukan sesuatu yang meningkatkan peluang memperoleh atau mempertahankan penghasilan.',
+        exp: 10
+      },
+      {
+        id: 'nn-capability',
+        title: 'Capability Action',
+        tag: 'Prioritas 2',
+        desc: 'Meningkatkan satu kemampuan yang relevan dengan pekerjaan target (Excel, Data, Admin).',
+        exp: 10
+      },
+      {
+        id: 'nn-system',
+        title: 'System Action',
+        tag: 'Prioritas 3',
+        desc: 'Mengelola waktu, uang, atau kondisi pribadi dengan lebih baik dan disiplin.',
+        exp: 10
+      }
+    ];
+
+    const SCHEDULE_ITEMS = [
+      { id: 'sch-1', time: '04.30–05.15', activity: 'Bangun, bersuci, salat Subuh', focus: 'Mulai hari dengan tenang; doa & zikir pagi singkat', category: 'Ibadah' },
+      { id: 'sch-2', time: '05.15–05.45', activity: "Al-Qur'an / murajaah / membaca terjemah", focus: 'Target realistis: 1–2 halaman atau 10–15 menit', category: 'Ibadah' },
+      { id: 'sch-3', time: '05.45–06.30', activity: 'Rapikan tempat tidur, mandi, sarapan ringan', focus: 'Menyiapkan ruang dan tubuh untuk beraktivitas', category: 'Personal' },
+      { id: 'sch-4', time: '06.30–07.00', activity: 'Perencanaan harian', focus: 'Tentukan 3 tugas utama: income, capability, system', category: 'High Impact' },
+      { id: 'sch-5', time: '07.00–09.00', activity: 'Job hunting terarah', focus: 'Cari lowongan, sesuaikan CV, kirim lamaran berkualitas', category: 'High Impact' },
+      { id: 'sch-6', time: '09.00–09.20', activity: 'Istirahat singkat', focus: 'Minum, peregangan, jauhkan layar', category: 'Personal' },
+      { id: 'sch-7', time: '09.20–11.00', activity: 'Skill & portfolio', focus: 'Excel, dashboard, SQL atau proyek administrasi', category: 'High Impact' },
+      { id: 'sch-8', time: '11.00–12.30', activity: 'Tugas rumah / makan / persiapan Zuhur', focus: 'Bantu keluarga sesuai kebutuhan; salat Zuhur', category: 'Personal' },
+      { id: 'sch-9', time: '12.30–13.00', activity: 'Istirahat / power nap', focus: 'Pulihkan energi, bukan scrolling tanpa batas', category: 'Personal' },
+      { id: 'sch-10', time: '13.00–15.00', activity: 'Internship Migunani / tugas PR / networking', focus: 'Selesaikan tanggung jawab dan simpan bukti hasil kerja', category: 'Work' },
+      { id: 'sch-11', time: '15.00–15.30', activity: 'Salat Asar dan zikir petang awal', focus: 'Sesuaikan dengan waktu azan setempat', category: 'Ibadah' },
+      { id: 'sch-12', time: '15.30–16.30', activity: 'Follow-up lamaran / latihan interview', focus: 'Satu follow-up atau satu sesi latihan terarah', category: 'High Impact' },
+      { id: 'sch-13', time: '16.30–17.30', activity: 'Aktivitas fisik ringan / bantu keluarga', focus: 'Jalan kaki, peregangan, atau pekerjaan rumah', category: 'Personal' },
+      { id: 'sch-14', time: 'Menjelang Magrib', activity: 'Salat Magrib dan tilawah singkat', focus: 'Zikir petang; baca Al-Qur’an sesuai kemampuan', category: 'Ibadah' },
+      { id: 'sch-15', time: 'Setelah Magrib–19.30', activity: 'Makan malam dan waktu keluarga', focus: 'Hadir untuk keluarga; hindari bawa stres ke meja makan', category: 'Personal' },
+      { id: 'sch-16', time: '19.30–20.00', activity: 'Salat Isya dan ibadah', focus: 'Salat wajib; witir jika belum dilakukan', category: 'Ibadah' },
+      { id: 'sch-17', time: '20.00–20.30', activity: 'Review harian dan persiapan besok', focus: 'Catat hasil, EXP, hambatan, dan 3 prioritas esok', category: 'High Impact' },
+      { id: 'sch-18', time: '20.30–21.00', activity: 'Waktu tenang / membaca ringan', focus: 'Kurangi layar dan aktivitas pemicu overthinking', category: 'Personal' },
+      { id: 'sch-19', time: '21.00–04.30', activity: 'Tidur', focus: 'Jaga waktu tidur; jangan korbankan istirahat', category: 'Personal' }
+    ];
+
+    const ISLAMIC_PRACTICES = [
+      { id: 'isl-1', name: 'Zikir pagi & petang', exp: 5 },
+      { id: 'isl-2', name: "Tilawah Al-Qur'an", exp: 5 },
+      { id: 'isl-3', name: 'Salat Dhuha', exp: 5 },
+      { id: 'isl-4', name: 'Qiyamul lail / Tahajud', exp: 8 },
+      { id: 'isl-5', name: 'Witir', exp: 5 },
+      { id: 'isl-6', name: 'Istighfar (33–100x)', exp: 3 },
+      { id: 'isl-7', name: 'Salawat', exp: 3 },
+      { id: 'isl-8', name: 'Sedekah sesuai kemampuan', exp: 5 },
+      { id: 'isl-9', name: 'Birrul walidain / bantu keluarga', exp: 5 },
+      { id: 'isl-10', name: 'Doa sebelum belajar/berusaha', exp: 2 }
+    ];
+
+    // --- STATE MANAGEMENT ---
+    const STORAGE_KEY = 'eris_project_dawnline_v1';
+    let currentFilter = 'All';
+
+    let appState = {
+      checkedIds: {},
+      customTasks: [],
+      notes: '',
+      lastUpdatedDate: new Date().toLocaleDateString('id-ID')
+    };
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          appState = { ...appState, ...parsed };
+        }
+      } catch (e) {
+        console.error('Gagal memuat data dari localStorage:', e);
+      }
+    }
+
+    function saveState() {
+      try {
+        appState.lastUpdatedDate = new Date().toLocaleDateString('id-ID');
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        const indicator = document.getElementById('save-indicator');
+        indicator.textContent = '✓ Tersimpan otomatis (' + new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ')';
+      } catch (e) {
+        console.error('Gagal menyimpan data ke localStorage:', e);
+      }
+    }
+
+    // --- LIVE CLOCK ---
+    function updateClock() {
+      const now = new Date();
+      const options = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+      const dateStr = now.toLocaleDateString('id-ID', options);
+      const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('live-clock').textContent = `${dateStr} • ${timeStr}`;
+    }
+
+    // --- RENDER FUNCTIONS ---
+    function renderNonNegotiables() {
+      const grid = document.getElementById('non-negotiables-grid');
+      grid.innerHTML = NON_NEGOTIABLES.map(item => {
+        const isChecked = !!appState.checkedIds[item.id];
+        return `
+          <div 
+            onclick="toggleItem('${item.id}')"
+            role="checkbox"
+            aria-checked="${isChecked}"
+            tabindex="0"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleItem('${item.id}');}"
+            class="cursor-pointer rounded-2xl p-5 border-2 transition-all duration-200 select-none flex flex-col justify-between gap-4 ${
+              isChecked 
+                ? 'bg-sapphire text-white border-sapphire shadow-md' 
+                : 'bg-white text-shadowGrey border-shadowGrey/15 hover:border-sapphire/60'
+            }"
+          >
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
+                  isChecked ? 'bg-plum text-shadowGrey' : 'bg-sapphire/10 text-sapphire'
+                }">
+                  ${item.tag}
+                </span>
+                <div class="w-6 h-6 rounded-lg flex items-center justify-center border ${
+                  isChecked ? 'bg-white text-sapphire border-white' : 'border-shadowGrey/30 bg-white'
+                }">
+                  ${isChecked ? '<svg class="w-4 h-4 font-bold" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : ''}
+                </div>
+              </div>
+              <h3 class="text-base font-bold">${item.title}</h3>
+              <p class="text-xs leading-relaxed ${isChecked ? 'text-white/90' : 'text-shadowGrey/75'}">
+                ${item.desc}
+              </p>
+            </div>
+            <div class="text-xs font-bold pt-2 border-t ${isChecked ? 'border-white/20 text-plum' : 'border-shadowGrey/10 text-sapphire'}">
+              ${isChecked ? '✓ Completed (+10 EXP)' : 'Klik untuk selesaikan (+10 EXP)'}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getCategoryBadgeClass(cat) {
+      switch (cat) {
+        case 'High Impact':
+          return 'bg-sapphire text-white';
+        case 'Work':
+          return 'bg-shadowGrey text-white';
+        case 'Ibadah':
+          return 'bg-plum/40 text-shadowGrey border border-plum';
+        default:
+          return 'bg-shadowGrey/10 text-shadowGrey';
+      }
+    }
+
+    function renderSchedule() {
+      const tbody = document.getElementById('schedule-tbody');
+      const filtered = currentFilter === 'All' 
+        ? SCHEDULE_ITEMS 
+        : SCHEDULE_ITEMS.filter(item => item.category === currentFilter);
+
+      tbody.innerHTML = filtered.map(item => {
+        const isChecked = !!appState.checkedIds[item.id];
+        return `
+          <tr 
+            onclick="toggleItem('${item.id}')"
+            class="cursor-pointer transition-colors select-none ${
+              isChecked ? 'bg-sapphire/5 text-shadowGrey/60' : 'hover:bg-shadowGrey/[0.03]'
+            }"
+          >
+            <td class="py-3.5 px-4 text-center">
+              <div class="w-5 h-5 mx-auto rounded-md flex items-center justify-center border transition ${
+                isChecked ? 'bg-sapphire border-sapphire text-white' : 'border-shadowGrey/30 bg-white'
+              }">
+                ${isChecked ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : ''}
+              </div>
+            </td>
+            <td class="py-3.5 px-4 font-bold text-xs sm:text-sm whitespace-nowrap ${isChecked ? 'line-through text-shadowGrey/50' : 'text-sapphire'}">
+              ${item.time}
+            </td>
+            <td class="py-3.5 px-4">
+              <div class="font-bold ${isChecked ? 'line-through' : 'text-shadowGrey'}">${item.activity}</div>
+              <div class="text-xs text-shadowGrey/65 md:hidden mt-0.5">${item.focus}</div>
+            </td>
+            <td class="py-3.5 px-4 text-xs text-shadowGrey/75 hidden md:table-cell">
+              ${item.focus}
+            </td>
+            <td class="py-3.5 px-4 text-right whitespace-nowrap">
+              <span class="inline-block px-2.5 py-1 rounded-md text-[11px] font-bold ${getCategoryBadgeClass(item.category)}">
+                ${item.category}
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderIslamicPractices() {
+      const grid = document.getElementById('islamic-grid');
+      grid.innerHTML = ISLAMIC_PRACTICES.map(item => {
+        const isChecked = !!appState.checkedIds[item.id];
+        return `
+          <div 
+            onclick="toggleItem('${item.id}')"
+            class="cursor-pointer p-3.5 rounded-xl border transition-all select-none flex items-center justify-between gap-3 ${
+              isChecked 
+                ? 'bg-shadowGrey text-white border-shadowGrey' 
+                : 'bg-white text-shadowGrey border-shadowGrey/15 hover:border-sapphire'
+            }"
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-5 h-5 rounded-md flex items-center justify-center border shrink-0 ${
+                isChecked ? 'bg-plum border-plum text-shadowGrey' : 'border-shadowGrey/30 bg-white'
+              }">
+                ${isChecked ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : ''}
+              </div>
+              <span class="text-xs sm:text-sm font-medium truncate ${isChecked ? 'line-through text-gray-300' : ''}">
+                ${item.name}
+              </span>
+            </div>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
+              isChecked ? 'bg-plum text-shadowGrey' : 'bg-sapphire/10 text-sapphire'
+            }">
+              +${item.exp} EXP
+            </span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderCustomTasks() {
+      const list = document.getElementById('custom-task-list');
+      const counter = document.getElementById('custom-task-counter');
+      counter.textContent = `${appState.customTasks.length} tugas`;
+
+      if (appState.customTasks.length === 0) {
+        list.innerHTML = `
+          <li class="text-xs text-shadowGrey/50 italic py-4 text-center border border-dashed border-shadowGrey/15 rounded-xl">
+            Belum ada tugas tambahan. Tambahkan misi spesifik hari ini di atas.
+          </li>
+        `;
+        return;
+      }
+
+      list.innerHTML = appState.customTasks.map(task => {
+        const isChecked = !!appState.checkedIds[task.id];
+        return `
+          <li class="flex items-center justify-between gap-2 p-3 rounded-xl border transition ${
+            isChecked ? 'bg-sapphire/5 border-sapphire/20' : 'bg-white border-shadowGrey/15'
+          }">
+            <div onclick="toggleItem('${task.id}')" class="flex items-center gap-3 flex-1 cursor-pointer select-none min-w-0">
+              <div class="w-5 h-5 rounded-md flex items-center justify-center border shrink-0 ${
+                isChecked ? 'bg-sapphire border-sapphire text-white' : 'border-shadowGrey/30 bg-white'
+              }">
+                ${isChecked ? '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>' : ''}
+              </div>
+              <span class="text-sm truncate ${isChecked ? 'line-through text-shadowGrey/50' : 'text-shadowGrey font-medium'}">
+                ${escapeHtml(task.text)}
+              </span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="text-[11px] font-bold text-sapphire bg-sapphire/10 px-2 py-0.5 rounded">+5 EXP</span>
+              <button 
+                type="button" 
+                onclick="deleteCustomTask('${task.id}')" 
+                title="Hapus tugas"
+                class="text-shadowGrey/40 hover:text-red-600 p-1 rounded transition cursor-pointer"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function updateMetrics() {
+      // Total core tasks (Non-Negotiables + Schedule + Custom Tasks)
+      const totalCore = NON_NEGOTIABLES.length + SCHEDULE_ITEMS.length + appState.customTasks.length;
+      let completedCore = 0;
+      let totalExp = 0;
+
+      NON_NEGOTIABLES.forEach(item => {
+        if (appState.checkedIds[item.id]) {
+          completedCore++;
+          totalExp += item.exp;
+        }
+      });
+
+      SCHEDULE_ITEMS.forEach(item => {
+        if (appState.checkedIds[item.id]) {
+          completedCore++;
+          totalExp += 5;
+        }
+      });
+
+      appState.customTasks.forEach(task => {
+        if (appState.checkedIds[task.id]) {
+          completedCore++;
+          totalExp += 5;
+        }
+      });
+
+      ISLAMIC_PRACTICES.forEach(item => {
+        if (appState.checkedIds[item.id]) {
+          totalExp += item.exp;
+        }
+      });
+
+      const percent = totalCore === 0 ? 0 : Math.round((completedCore / totalCore) * 100);
+
+      document.getElementById('completed-count').textContent = `${completedCore} / ${totalCore}`;
+      document.getElementById('progress-percent').textContent = `${percent}%`;
+      document.getElementById('total-exp').textContent = `+${totalExp} EXP`;
+      
+      const bar = document.getElementById('progress-bar');
+      bar.style.width = `${percent}%`;
+
+      const badge = document.getElementById('status-badge');
+      if (percent >= 80) {
+        bar.className = 'h-full bg-plum rounded-full transition-all duration-300 ease-out';
+        badge.textContent = '★ Target 80% Tercapai! (GRIT Mode)';
+        badge.className = 'font-bold text-shadowGrey bg-plum/40 px-2 py-0.5 rounded';
+      } else if (percent >= 40) {
+        bar.className = 'h-full bg-sapphire rounded-full transition-all duration-300 ease-out';
+        badge.textContent = 'On Track — Pertahankan Momentum';
+        badge.className = 'font-bold text-sapphire';
+      } else {
+        bar.className = 'h-full bg-sapphire rounded-full transition-all duration-300 ease-out';
+        badge.textContent = 'Mode: Eksekusi Satu per Satu';
+        badge.className = 'font-bold text-shadowGrey/70';
+      }
+    }
+
+    function renderAll() {
+      renderNonNegotiables();
+      renderSchedule();
+      renderIslamicPractices();
+      renderCustomTasks();
+      updateMetrics();
+    }
+
+    // --- INTERACTIONS ---
+    window.toggleItem = function(id) {
+      if (appState.checkedIds[id]) {
+        delete appState.checkedIds[id];
+      } else {
+        appState.checkedIds[id] = true;
+      }
+      saveState();
+      renderAll();
+    };
+
+    window.deleteCustomTask = function(id) {
+      appState.customTasks = appState.customTasks.filter(t => t.id !== id);
+      delete appState.checkedIds[id];
+      saveState();
+      renderAll();
+    };
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Filter Buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.className = 'filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition bg-shadowGrey/5 text-shadowGrey hover:bg-sapphire/10';
+        });
+        btn.className = 'filter-btn active px-3 py-1.5 rounded-lg text-xs font-bold transition bg-shadowGrey text-white';
+        currentFilter = btn.dataset.filter;
+        renderSchedule();
+      });
+    });
+
+    // Custom Task Submit
+    document.getElementById('custom-task-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('custom-task-input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      appState.customTasks.push({
+        id: 'custom-' + Date.now(),
+        text: val
+      });
+      input.value = '';
+      saveState();
+      renderAll();
+    });
+
+    // Daily Notes Auto-save
+    const notesEl = document.getElementById('daily-notes');
+    notesEl.addEventListener('input', () => {
+      appState.notes = notesEl.value;
+      saveState();
+    });
+
+    // Reset Day Controls
+    const resetContainer = document.getElementById('reset-container');
+    const resetConfirmBox = document.getElementById('reset-confirm-box');
+
+    document.getElementById('btn-reset-prompt').addEventListener('click', () => {
+      resetContainer.classList.add('hidden');
+      resetConfirmBox.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-reset-cancel').addEventListener('click', () => {
+      resetConfirmBox.classList.add('hidden');
+      resetContainer.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-reset-confirm').addEventListener('click', () => {
+      appState.checkedIds = {};
+      appState.customTasks = [];
+      appState.notes = '';
+      notesEl.value = '';
+      saveState();
+      renderAll();
+      resetConfirmBox.classList.add('hidden');
+      resetContainer.classList.remove('hidden');
+    });
+
+    // --- INITIALIZE ---
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      notesEl.value = appState.notes || '';
+      updateClock();
+      setInterval(updateClock, 1000);
+      renderAll();
+    });
+  </script>
+</body>
+</html>
